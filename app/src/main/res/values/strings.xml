@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Pets.IO</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Senha</string>
+    <string name="prompt_password_confirmation">Confirmar senha</string>
+    <string name="prompt_name">Nome</string>
+    <string name="prompt_pets">Quantos pets você tem?</string>
+    <string name="action_sign_in">Entrar</string>
+    <string name="action_register">Criar conta</string>
+    <string name="welcome">"Bem vindo(a), %1$s!"</string>
+    <string name="invalid_username">E-mail inválido</string>
+    <string name="invalid_useralias">Nome inválido</string>
+    <string name="invalid_password">Senha inválida</string>
+    <string name="mismatched_passwords">Senhas diferentes</string>
+    <string name="login_failed">"Login falhou"</string>
+    <!-- Generic strings -->
+    <string name="string_confirm">Confirmar</string>
+    <string name="string_or">ou</string>
+    <string name="string_create_your_account">Crie sua conta no Pets.IO!</string>
+    <string name="title_activity_home">Pets.IO</string>
+    <string name="action_settings">Settings</string>
+    <!-- Home action strings -->
+    <string name="home_action_register_device">Registrar dispositivo</string>
+    <string name="home_action_get_data">Consultar dispositivos</string>
+    <string name="home_action_register_new_pet">Adicionar pet</string>
+    <string name="home_action_livestream">Livestream</string>
+    <string name="home_action_profile">Perfil</string>
+    <string name="home_action_settings">Configurações</string>
+    <string name="home_footer">Pets.IO - TCC 2021 de Caio Sanches</string>
+    <!-- Profile strings -->
+    <string name="profile_action_logout">Sair</string>
+    <string name="profile_hello">Olá, %1$s!</string>
+    <string name="profile_email">Seu e-mail é %1$s</string>
+    <plurals name="profile_pets">
+        <item quantity="zero">Você não tem pets cadastrados.</item>
+        <item quantity="one">Você tem %d pet cadastrado.</item>
+        <item quantity="other">Você tem %d pets cadastrados.</item>
+    </plurals>
+    <plurals name="profile_devices">
+        <item quantity="zero">Você não tem devices registrados.</item>
+        <item quantity="one">Você tem %d device registrado.</item>
+        <item quantity="other">Você tem %d devices registrados.</item>
+    </plurals>
+    <!-- Pending pets strings -->
+    <string name="pending_pets_header">Cadastrar pets</string>
+    <string name="pending_pets_prompt">Manda uma foto de cada um dos seus pets pra gente poder identificá-los automaticamente pra você!</string>
+
+    <string name="register_wifi_ssid">Nome da rede WiFi</string>
+    <string name="register_wifi_pass">Senha da rede WiFi</string>
+    <string name="register_action">Registrar</string>
+    <string name="register_help">Escaneie este código com seu dispositivo pets.io</string>
+    <string name="string_wifi_ssid_default">VIVOFIBRA-7F90</string>
+    <string name="string_wifi_pass_default">c662727f90</string>
+
+    <string name="events_title">Eventos</string>
+    <string name="events_choose_device">Escolha um dos seus dispositivos</string>
+    <string name="events_no_devices">Você não possui nenhum dispositivo Pets.IO registrado</string>
+</resources>
