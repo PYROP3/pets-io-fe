@@ -85,6 +85,15 @@ public class ServerController {
         );
     }
 
+    public boolean requestEditEvent(String token, String eventId, String petId) {
+        return httpClient.sendEditEventRequest(
+                mContext,
+                token,
+                eventId,
+                petId
+        );
+    }
+
     public List<Pet> requestPetList(String token) {
         return httpClient.sendPetsRequest(
                 mContext,

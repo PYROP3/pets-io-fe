@@ -39,9 +39,6 @@ public class EventFocusActivity extends AppCompatActivity {
         TextView deviceID = findViewById(R.id.textView_eventFocus_deviceID);
         deviceID.setText(event.getDevice());
 
-//        TextView pet = findViewById(R.id.textView_eventFocus_pet);
-//        pet.setText(event.getDetectedPet() == null ? "?" : event.getDetectedPet());
-        // TODO add editable text field so user can correct server guess if needed
         new Thread(() -> {
             Spinner petSpinner = findViewById(R.id.spinner_eventFocus_pet);
             ArrayList<String> petNames = new ArrayList<>();
@@ -59,9 +56,13 @@ public class EventFocusActivity extends AppCompatActivity {
                     String petName = (String) petSpinner.getAdapter().getItem(position);
                     for (Pet pet : LoginRepository.getInstance().getUser().getPets()) {
                         if (pet.getName().equals(petName) && !petName.equals(event.getDetectedPet())) {
-                            // TODO send request to update event with petName
-                            // ID = event.getID()
                             Log.d(TAG, "Updating event " + event.getID() + " for pet " + pet.getID() + " (" + pet.getName() + ")");
+                            new Thread(() -> new ServerController(EventFocusActivity.this).requestEditEvent(
+                                    LoginRepository.getInstance().getUser().getAuthToken(),
+                                    event.getID(),
+                                    pet.getID()
+                            )).start();
+                            event.setDetectedPet(pet.getID());
                         }
                     }
                 }

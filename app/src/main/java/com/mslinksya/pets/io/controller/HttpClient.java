@@ -529,30 +529,37 @@ public class HttpClient implements Callback{
         }
     }
 
-    public boolean sendEditEventRequest(Context context, String token, String eventID){
+    public boolean sendEditEventRequest(Context context, String token, String eventID, String petId){
         if(!isNetworkAvailable(context))
             return false;
 
-        Log.d(TAG, "Preparing pic request : " + eventID);
+        Log.d(TAG, "Preparing edit event request : " + eventID);
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(Constants.SERVER_SCHEME_HTTPS)
                 .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
-                .addPathSegment(Constants.SERVER_REQUEST_DELETE_EVENT)
-                .addQueryParameter(Constants.EVENT_ID_KEY, eventID)
+                .addPathSegment(Constants.SERVER_REQUEST_EDIT_EVENT)
                 .build();
 
         Log.d(TAG, "Sending request to: " + url.toString());
 
+        JSONObject body = new JSONObject();
+        try {
+            body.put(Constants.EVENT_ID_KEY, eventID)
+                    .put(Constants.PET_ID_KEY, petId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Request request = new Request.Builder()
                 .header("Authorization", Constants.KEY_AUTH_TOKEN + token)
                 .url(url)
-                .get()
+                .post(RequestBody.create(JSON, body.toString()))
                 .build();
 
-        Log.d(TAG, "Enqueuing new retrofit callback [" + Constants.SERVER_EVENT_PIC + "]");
+        Log.d(TAG, "Enqueuing new retrofit callback [" + Constants.SERVER_REQUEST_EDIT_EVENT + "]");
 
         try {
             Response r = okHttpClient.newCall(request).execute();
