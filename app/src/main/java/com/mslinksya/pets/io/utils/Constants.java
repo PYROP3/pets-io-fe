@@ -40,11 +40,6 @@ public class Constants {
     public static final String MSG_PASSWORD_MISMATCH =  "Passwords don't match!";
     public static final String ALERT_INVALID_INPUT = "Input not valid!";
 
-    //LoginActivity
-    public static final String TOAST_TURN_ON_LOCATION = "Please, turn on device location";
-    public static final String TOAST_LOGIN_FAILURE = "Sorry, we can't login!\nFailed to communicate with server";
-    public static final String ALERT_VERIFY_EMAIL = "Only one more step!\nPlease check your mail box to verify your email address!";
-
     public static final String USER_NAME_KEY = "UserName";
     public static final String USER_TOKEN_KEY = "UserToken";
     public static final String USER_N_PETS_KEY = "UserNPets";
@@ -71,4 +66,11 @@ public class Constants {
     public static final String KEY_AUTH_TOKEN = "Bearer ";
 
     public static final String EMAIL_REGEX_STRING = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+
+    public static final String BLE_UUID_SERVICE = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+    public static final String BLE_UUID_CHAR_SSID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+    public static final String BLE_UUID_CHAR_PASS = "995a473b-498e-43d0-9be3-7f3c37ba005f";
+    public static final String BLE_UUID_CHAR_TOKN = "70461f4d-4142-4135-9582-8d9a9fc50ea4";
+
+    public static final int BLE_CONNECT_TIMEOUT_MS = 10000;
 }

@@ -1,30 +1,37 @@
 package com.mslinksya.pets.io.ui.register;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import com.mslinksya.pets.io.ui.util.BLEComm;
 import com.mslinksya.pets.io.utils.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.mslinksya.pets.io.R;
 import com.mslinksya.pets.io.controller.RegistrationController;
 import com.mslinksya.pets.io.data.model.RegistrationModel;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
-    private static final int QR_SIZE = 700;
+    private static final int ENABLE_BLUETOOTH_REQUEST_CODE = 1;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
+
+    private CompletableFuture<Boolean> userInteractionLock = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +39,14 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
     }
 
-    public void onClickRegister(View v) {
-        findViewById(R.id.imageView_register_qrcode).setVisibility(View.GONE);
-        findViewById(R.id.textView_register_help).setVisibility(View.GONE);
+    private void enableRegister() {
+        findViewById(R.id.button_register_action).setEnabled(true);
+        findViewById(R.id.progressBar_register).setVisibility(View.GONE);
+    }
 
-        findViewById(R.id.button_register_action).setActivated(false);
+    public void onClickRegister(View v) {
+        findViewById(R.id.button_register_action).setEnabled(false);
+        findViewById(R.id.progressBar_register).setVisibility(View.VISIBLE);
 
         String wifi_ssid = ((EditText)findViewById(R.id.editText_register_wifi_ssid))
                 .getText().toString();
@@ -53,33 +63,104 @@ public class RegisterActivity extends AppCompatActivity {
             if (registrationModel == null) {
                 Log.w(TAG, "Could not request registration");
 
-                findViewById(R.id.button_register_action).setActivated(true);
+                enableRegister();
                 runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Não foi possível realizar a solicitação", Toast.LENGTH_LONG).show());
                 return;
             }
 
-            QRCodeWriter writer = new QRCodeWriter();
+            BLEComm comm = new BLEComm(this);
 
-            try {
-                BitMatrix bm = writer.encode(registrationModel.getFormattedData(),
-                        BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
-                Bitmap bmp = Bitmap.createBitmap(QR_SIZE, QR_SIZE, Bitmap.Config.RGB_565);
-                for (int x = 0; x < QR_SIZE; x++){
-                    for (int y = 0; y < QR_SIZE; y++){
-                        bmp.setPixel(x, y, bm.get(x,y) ? Color.BLACK : Color.WHITE);
+            if (!comm.isPermissionGranted()) {
+                userInteractionLock = new CompletableFuture<>();
+                askPermission();
+                try {
+                    if (!userInteractionLock.get()) {
+                        Log.w(TAG, "Failed waiting for permission");
+                        enableRegister();
+                        return;
                     }
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                    Log.w(TAG, "Failed waiting for permission");
+                    enableRegister();
+                    return;
                 }
+            }
 
-                runOnUiThread(() -> {
-                    ((ImageView) findViewById(R.id.imageView_register_qrcode)).setImageBitmap(bmp);
+            if (!comm.isBluetoothEnabled()) {
+                userInteractionLock = new CompletableFuture<>();
+                promptEnableBluetooth();
+                try {
+                    if (!userInteractionLock.get()) {
+                        Log.w(TAG, "Failed waiting for bluetooth");
+                        enableRegister();
+                        return;
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                    Log.w(TAG, "Failed waiting for bluetooth");
+                    enableRegister();
+                    return;
+                }
+            }
 
-                    findViewById(R.id.imageView_register_qrcode).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView_register_help).setVisibility(View.VISIBLE);
-                });
+            if (!comm.registerDevice(registrationModel)) {
+                Log.w(TAG, "Could not communicate with device");
 
-            } catch (WriterException e) {
-                e.printStackTrace();
+                enableRegister();
+                runOnUiThread(() -> Toast.makeText(RegisterActivity.this,
+                        "Não foi possível comunicar com o seu dispositivo",
+                        Toast.LENGTH_LONG).show());
+            } else {
+                runOnUiThread(() -> Toast.makeText(RegisterActivity.this,
+                        "Seu dispositivo está sendo registrado com o nosso servidor",
+                        Toast.LENGTH_LONG).show());
+                finish();
             }
         }).start();
+    }
+
+    private void askPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Precisamos da sua permissão")
+                    .setMessage("Precisamos da permissão de localização para poder conversar com " +
+                            "o seu dispositivo Pets.IO")
+                    .setCancelable(true)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> reqPermission())
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) ->
+                            userInteractionLock.complete(false))
+                    .create().show();
+        } else {
+            reqPermission();
+        }
+    }
+
+    private void reqPermission() {
+        String[] permissions = new String[1];
+        permissions[0] = Manifest.permission.ACCESS_FINE_LOCATION;
+        requestPermissions(permissions, LOCATION_PERMISSION_REQUEST_CODE);
+    }
+
+    private void promptEnableBluetooth() {
+        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(intent, ENABLE_BLUETOOTH_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE &&
+                permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            userInteractionLock.complete(grantResults[0] == PackageManager.PERMISSION_GRANTED);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ENABLE_BLUETOOTH_REQUEST_CODE) {
+            userInteractionLock.complete(resultCode == Activity.RESULT_OK);
+        }
     }
 }

@@ -26,4 +26,16 @@ public class RegistrationModel {
                 .add(request_id)
                 .toString();
     }
+
+    public String getNonce() {
+        return request_id;
+    }
+
+    public String getSSID() {
+        return wifi_ssid;
+    }
+
+    public String getPass() {
+        return wifi_pass;
+    }
 }
