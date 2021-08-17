@@ -432,11 +432,12 @@ public class HttpClient implements Callback{
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    Log.d(TAG, "Iteration: " + object.toString());
                     devList.add(new Event(
                             object.getString(Constants.EVENT_ID_KEY),
                             deviceID,
                             !object.getString(Constants.EVENT_EXTRA_KEY).equals("null") ? object.getString(Constants.EVENT_EXTRA_KEY) : null,
-                            !object.getString(Constants.EVENT_PET_KEY).equals("null") ? object.getString(Constants.EVENT_EXTRA_KEY) : null,
+                            !object.getString(Constants.EVENT_PET_KEY).equals("null") ? object.getString(Constants.EVENT_PET_KEY) : null,
                             eventDate));
                 }
                 Log.d(TAG, "Found " + devList.size() + " events");
@@ -548,7 +549,7 @@ public class HttpClient implements Callback{
         JSONObject body = new JSONObject();
         try {
             body.put(Constants.EVENT_ID_KEY, eventID)
-                    .put(Constants.PET_ID_KEY, petId);
+                    .put(Constants.EVENT_PET_KEY, petId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

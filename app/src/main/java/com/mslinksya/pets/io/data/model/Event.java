@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mslinksya.pets.io.utils.Log;
+
 import java.util.Date;
 
 public class Event implements Parcelable {
@@ -21,6 +23,7 @@ public class Event implements Parcelable {
         this.detectedPet = detectedPet;
         this.timestamp = timestamp;
         this.picture = null;
+        Log.d("Event", "New event with pet = " + detectedPet);
     }
 
     protected Event(Parcel in) {

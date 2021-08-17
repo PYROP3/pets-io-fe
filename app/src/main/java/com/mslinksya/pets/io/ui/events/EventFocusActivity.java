@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import com.mslinksya.pets.io.data.EventRepository;
 import com.mslinksya.pets.io.utils.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +36,8 @@ public class EventFocusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_focus);
 
-        Event event = getIntent().getParcelableExtra("EVENT");
+        // Event event = getIntent().getParcelableExtra("EVENT");
+        Event event = EventRepository.getEvent(getIntent().getStringExtra("EVENT"));
 
         TextView deviceID = findViewById(R.id.textView_eventFocus_deviceID);
         deviceID.setText(event.getDevice());
@@ -63,6 +66,8 @@ public class EventFocusActivity extends AppCompatActivity {
                                     pet.getID()
                             )).start();
                             event.setDetectedPet(pet.getID());
+                            EventRepository.editPet(event.getID(), pet.getID());
+                            Log.d(TAG, "event now has pet id = " + event.getDetectedPet());
                         }
                     }
                 }
@@ -74,13 +79,16 @@ public class EventFocusActivity extends AppCompatActivity {
             });
 
             if (event.getDetectedPet() == null) {
+                Log.d(TAG, "event " + event.getID() + " has no detected pet");
                 runOnUiThread(() -> petSpinner.setSelection(0));
             } else {
                 String detectedPet = event.getDetectedPet();
                 int i = 1;
                 boolean found = false;
                 for (Pet pet : LoginRepository.getInstance().getUser().getPets()) {
+                    Log.d(TAG, "comparing " + detectedPet + " to " + pet.getID() + " (" + pet.getName() + ")");
                     if (detectedPet.equals(pet.getID())) {
+                        Log.d(TAG, "event " + event.getID() + " has pet " + pet.getName());
                         int finalI = i;
                         runOnUiThread(() -> petSpinner.setSelection(finalI));
                         found = true;
@@ -89,6 +97,7 @@ public class EventFocusActivity extends AppCompatActivity {
                     i++;
                 }
                 if (!found) {
+                    Log.d(TAG, "event " + event.getID() + " could not find pet with id " + detectedPet);
                     runOnUiThread(() -> petSpinner.setSelection(0));
                 }
             }
@@ -124,9 +133,8 @@ public class EventFocusActivity extends AppCompatActivity {
                             LoginRepository.getInstance().getUser().getAuthToken(),
                             event.getID()
                     )) {
-                        EventsActivity.deletedEvent(getIntent().getIntExtra("EVENT_IDX", -1));
-                        setResult(1);
-                        Toast.makeText(EventFocusActivity.this, "Evento deletado!", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(EventFocusActivity.this, "Evento deletado!", Toast.LENGTH_SHORT).show());
+                        EventRepository.deleteEvent(event.getID());
                         finish();
                     }
                 }).start())

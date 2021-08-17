@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+
+import com.mslinksya.pets.io.data.EventRepository;
 import com.mslinksya.pets.io.utils.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,11 +29,11 @@ import java.util.List;
 public class EventsActivity extends AppCompatActivity {
     private static final String TAG = EventsActivity.class.getSimpleName();
 
-    private static volatile int eventIndex = -1;
-
-    public static void deletedEvent(int eventIndex) {
-        EventsActivity.eventIndex = eventIndex;
-    }
+//    private static volatile int eventIndex = -1;
+//
+//    public static void deletedEvent(int eventIndex) {
+//        EventsActivity.eventIndex = eventIndex;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,66 +80,65 @@ public class EventsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (eventIndex != -1) {
-            LinearLayout eventListLayout = findViewById(R.id.linearlayout_events_list);
-            eventListLayout.removeViewAt(eventIndex);
-            eventIndex = -1;
-        }
+        updateEventList();
     }
 
     private void requestUpdateEventList(String deviceID) {
         new Thread(() -> {
-            LinearLayout eventListLayout = findViewById(R.id.linearlayout_events_list);
+            EventRepository.updateEvents(new ServerController(this)
+                    .requestEventList(LoginRepository.getInstance().getUser().getAuthToken(),
+                            deviceID));
 
-            runOnUiThread(eventListLayout::removeAllViews);
-
-            List<Event> eventList = new ServerController(this)
-                    .requestEventList(LoginRepository.getInstance().getUser().getAuthToken(), deviceID);
-
-            final int[] i = {0};
-            for (Event event : eventList) {
-                LinearLayout eventLayout = new LinearLayout(this);
-                eventLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                if (event.getPicture() == null) {
-                    Bitmap eventPicture = new ServerController(this)
-                            .requestEventPicture(LoginRepository.getInstance().getUser().getAuthToken(), event.getID());
-                    event.setPicture(eventPicture);
-                }
-
-                ImageView eventImageView = new ImageView(this);
-                eventImageView.setImageBitmap(event.getPicture());
-
-                TextView eventTimestamp = new TextView(this);
-                eventTimestamp.setText(event.getTimestamp().toString());
-
-                eventLayout.addView(eventImageView);
-                eventLayout.addView(eventTimestamp);
-
-                eventLayout.setOnClickListener(v -> {
-                    Intent intent = new Intent(EventsActivity.this, EventFocusActivity.class);
-                    intent.putExtra("EVENT", event);
-                    intent.putExtra("EVENT_IDX", i[0]++);
-                    startActivity(intent);
-                });
-
-                runOnUiThread(() -> {
-                    eventListLayout.addView(eventLayout);
-                    Log.d(TAG, "eventListLayout now has " + eventListLayout.getChildCount() + " children");
-                });
-            }
+            updateEventList();
         }).start();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 1) {
-            if (eventIndex != -1) {
-                LinearLayout eventListLayout = findViewById(R.id.linearlayout_events_list);
-                runOnUiThread(() -> eventListLayout.removeViewAt(eventIndex));
-                eventIndex = -1;
+    private void updateEventList() {
+        LinearLayout eventListLayout = findViewById(R.id.linearlayout_events_list);
+
+        runOnUiThread(eventListLayout::removeAllViews);
+
+        for (Event event : EventRepository.getEvents()) {
+            LinearLayout eventLayout = new LinearLayout(this);
+            eventLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            if (event.getPicture() == null) {
+                Bitmap eventPicture = new ServerController(this)
+                        .requestEventPicture(LoginRepository.getInstance().getUser().getAuthToken(), event.getID());
+                event.setPicture(eventPicture);
             }
+
+            ImageView eventImageView = new ImageView(this);
+            eventImageView.setImageBitmap(event.getPicture());
+
+            TextView eventTimestamp = new TextView(this);
+            eventTimestamp.setText(event.getTimestamp().toString());
+
+            eventLayout.addView(eventImageView);
+            eventLayout.addView(eventTimestamp);
+
+            eventLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(EventsActivity.this, EventFocusActivity.class);
+                intent.putExtra("EVENT", event.getID());
+                startActivity(intent);
+            });
+
+            runOnUiThread(() -> {
+                eventListLayout.addView(eventLayout);
+                Log.d(TAG, "eventListLayout now has " + eventListLayout.getChildCount() + " children");
+            });
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == 1) {
+//            if (eventIndex != -1) {
+//                LinearLayout eventListLayout = findViewById(R.id.linearlayout_events_list);
+//                runOnUiThread(() -> eventListLayout.removeViewAt(eventIndex));
+//                eventIndex = -1;
+//            }
+//        }
+//    }
 }
