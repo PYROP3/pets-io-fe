@@ -40,8 +40,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void enableRegister() {
-        findViewById(R.id.button_register_action).setEnabled(true);
-        findViewById(R.id.progressBar_register).setVisibility(View.GONE);
+        runOnUiThread(() -> {
+            findViewById(R.id.button_register_action).setEnabled(true);
+            findViewById(R.id.progressBar_register).setVisibility(View.GONE);
+        });
     }
 
     public void onClickRegister(View v) {
