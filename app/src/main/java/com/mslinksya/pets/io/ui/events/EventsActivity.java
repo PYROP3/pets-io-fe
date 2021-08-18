@@ -8,12 +8,17 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import com.mslinksya.pets.io.data.EventRepository;
+import com.mslinksya.pets.io.ui.util.ClockView;
 import com.mslinksya.pets.io.utils.Log;
+
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,6 +29,8 @@ import com.mslinksya.pets.io.data.model.Event;
 import com.mslinksya.pets.io.ui.home.HomeActivity;
 import com.mslinksya.pets.io.ui.register.RegisterActivity;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EventsActivity extends AppCompatActivity {
@@ -101,6 +108,7 @@ public class EventsActivity extends AppCompatActivity {
         for (Event event : EventRepository.getEvents()) {
             LinearLayout eventLayout = new LinearLayout(this);
             eventLayout.setOrientation(LinearLayout.HORIZONTAL);
+            eventLayout.setPadding(20, 20, 20, 20);
 
             if (event.getPicture() == null) {
                 Bitmap eventPicture = new ServerController(this)
@@ -112,10 +120,27 @@ public class EventsActivity extends AppCompatActivity {
             eventImageView.setImageBitmap(event.getPicture());
 
             TextView eventTimestamp = new TextView(this);
-            eventTimestamp.setText(event.getTimestamp().toString());
+            Calendar c = event.getTimestamp();
+            eventTimestamp.setText(String.format("%02d/%02d/%d\n%s",
+                    c.get(Calendar.DAY_OF_MONTH),
+                    c.get(Calendar.MONTH) + 1,
+                    c.get(Calendar.YEAR),
+                    getWeekday(c.get(Calendar.DAY_OF_WEEK))));
+            eventTimestamp.setHeight(event.getPicture().getHeight());
+            eventTimestamp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            eventTimestamp.setGravity(Gravity.CENTER);
+            eventTimestamp.setTextSize(22);
+
+            ClockView clockView = new ClockView(this, c);
+            clockView.setMinimumWidth(200);
+            clockView.setMinimumHeight(event.getPicture().getHeight());
+            // event.getTimestamp().toString()
 
             eventLayout.addView(eventImageView);
+            eventLayout.addView(createSpace(50));
             eventLayout.addView(eventTimestamp);
+            eventLayout.addView(createSpace(50));
+            eventLayout.addView(clockView);
 
             eventLayout.setOnClickListener(v -> {
                 Intent intent = new Intent(EventsActivity.this, EventFocusActivity.class);
@@ -125,20 +150,20 @@ public class EventsActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
                 eventListLayout.addView(eventLayout);
+                eventListLayout.addView(createSpace(10));
                 Log.d(TAG, "eventListLayout now has " + eventListLayout.getChildCount() + " children");
             });
         }
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == 1) {
-//            if (eventIndex != -1) {
-//                LinearLayout eventListLayout = findViewById(R.id.linearlayout_events_list);
-//                runOnUiThread(() -> eventListLayout.removeViewAt(eventIndex));
-//                eventIndex = -1;
-//            }
-//        }
-//    }
+    private String getWeekday(int weekday) {
+        return new String[]{"DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"}[weekday - 1];
+    }
+
+    private Space createSpace(int size) {
+        Space sp = new Space(this);
+        sp.setMinimumHeight(size);
+        sp.setMinimumWidth(size);
+        return sp;
+    }
 }

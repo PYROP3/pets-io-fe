@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="clock_stroke_daytime">#1D043D</color>
+    <color name="clock_stroke_nighttime">#E3C852</color>
+    <color name="clock_fill_daytime">#E3C852</color>
+    <color name="clock_fill_nighttime">#1D043D</color>
 </resources>

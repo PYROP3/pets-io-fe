@@ -6,13 +6,15 @@ import android.os.Parcelable;
 
 import com.mslinksya.pets.io.utils.Log;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Event implements Parcelable {
     private final String ID;
     private final String device;
     private final String extra;
-    private final Date timestamp;
+    private final Calendar timestamp;
     private String detectedPet;
     private Bitmap picture;
 
@@ -21,9 +23,17 @@ public class Event implements Parcelable {
         this.device = device;
         this.extra = extra;
         this.detectedPet = detectedPet;
-        this.timestamp = timestamp;
         this.picture = null;
-        Log.d("Event", "New event with pet = " + detectedPet);
+
+        this.timestamp = Calendar.getInstance();
+        this.timestamp.setTime(new Date(timestamp.getTime() + this.timestamp.getTimeZone().getRawOffset()));
+//        Log.d("Event", "New event offset=" + this.timestamp.getTimeZone().getRawOffset());
+//        Log.d("Event", "New event timezone=" + timestamp.toString());
+//        Log.d("Event", "New event calendar=" + this.timestamp.toString());
+//        this.timestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        Log.d("Event", "New event prev calendar=" + this.timestamp.toString());
+//        Log.d("Event", "New event with pet = " + detectedPet + ", timezone=" + this.timestamp.getTime());
+//        Log.d("Event", "New event updated calendar=" + this.timestamp.toString());
     }
 
     protected Event(Parcel in) {
@@ -31,7 +41,8 @@ public class Event implements Parcelable {
         device = in.readString();
         extra = in.readString();
         detectedPet = in.readString();
-        timestamp = new Date(in.readLong());
+        timestamp = Calendar.getInstance();
+        timestamp.setTimeInMillis(in.readLong());
         picture = in.readParcelable(Bitmap.class.getClassLoader());
     }
 
@@ -67,7 +78,7 @@ public class Event implements Parcelable {
         return extra;
     }
 
-    public Date getTimestamp() {
+    public Calendar getTimestamp() {
         return timestamp;
     }
 
@@ -90,7 +101,7 @@ public class Event implements Parcelable {
         dest.writeString(this.device);
         dest.writeString(this.extra);
         dest.writeString(this.detectedPet);
-        dest.writeLong(timestamp.getTime());
+        dest.writeLong(timestamp.getTime().getTime());
         dest.writeParcelable(picture, 0);
     }
 }

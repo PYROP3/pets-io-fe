@@ -12,6 +12,8 @@ import com.mslinksya.pets.io.fcm.MessagingService;
 import com.mslinksya.pets.io.ui.pendingpets.PendingPetActivity;
 import com.mslinksya.pets.io.ui.profile.ProfileActivity;
 import com.mslinksya.pets.io.ui.register.RegisterActivity;
+import com.mslinksya.pets.io.ui.settings.SettingsActivity;
+import com.mslinksya.pets.io.ui.settings.SettingsProvider;
 import com.mslinksya.pets.io.utils.Constants;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +49,12 @@ public class HomeActivity extends AppCompatActivity {
         Button eventsButton = findViewById(R.id.buttonHomeGetData);
         eventsButton.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, EventsActivity.class);
+            startActivity(intent);
+        });
+
+        Button settingsButton = findViewById(R.id.buttonHomeSettings);
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);
         });
 

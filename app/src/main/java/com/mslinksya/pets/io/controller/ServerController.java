@@ -7,9 +7,18 @@ import com.mslinksya.pets.io.data.model.AccountCreationRequestModel;
 import com.mslinksya.pets.io.data.model.Event;
 import com.mslinksya.pets.io.data.model.LoginRequestModel;
 import com.mslinksya.pets.io.data.model.Pet;
+import com.mslinksya.pets.io.ui.settings.SettingsProvider;
+import com.mslinksya.pets.io.utils.Constants;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.HttpUrl;
 
 import java.util.List;
+
+import static com.mslinksya.pets.io.utils.Constants.SERVER_HOST_CLOUD;
+import static com.mslinksya.pets.io.utils.Constants.SERVER_HOST_LOCAL;
+import static com.mslinksya.pets.io.utils.Constants.SERVER_PORT_CLOUD;
+import static com.mslinksya.pets.io.utils.Constants.SERVER_PORT_LOCAL;
+import static com.mslinksya.pets.io.utils.Constants.SETTING_ENV;
 
 public class ServerController {
     private final HttpClient httpClient;
@@ -18,6 +27,14 @@ public class ServerController {
     public ServerController(Context mContext) {
         this.mContext = mContext;
         httpClient = new HttpClient();
+    }
+
+    public static HttpUrl.Builder getServerUrl() {
+        boolean isLocal = SettingsProvider.getInstance().getBooleanSetting(SETTING_ENV);
+        return new HttpUrl.Builder()
+                .scheme(Constants.SERVER_SCHEME_HTTPS)
+                .host(isLocal ? SERVER_HOST_LOCAL : SERVER_HOST_CLOUD)
+                .port(isLocal ? SERVER_PORT_LOCAL : SERVER_PORT_CLOUD);
     }
 
     public boolean createAccount(Callback callback, AccountCreationRequestModel creationRequest) {

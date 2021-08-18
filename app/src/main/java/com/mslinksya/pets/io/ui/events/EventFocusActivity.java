@@ -104,7 +104,7 @@ public class EventFocusActivity extends AppCompatActivity {
         }).start();
 
         TextView datetime = findViewById(R.id.textView_eventFocus_datetime);
-        datetime.setText(event.getTimestamp().toString());
+        datetime.setText(String.format("%1$tA %1$tb %1$td %1$tY at %1$tI:%1$tM %1$Tp", event.getTimestamp()));
 
         TextView eventID = findViewById(R.id.textView_eventFocus_eventID);
         eventID.setText("ID: " + event.getID());
@@ -117,9 +117,9 @@ public class EventFocusActivity extends AppCompatActivity {
         }
 
         CalendarView calendarView = findViewById(R.id.calendarView_eventFocus);
-        calendarView.setDate(event.getTimestamp().getTime());
+        calendarView.setDate(event.getTimestamp().getTime().getTime());
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) ->
-                view.setDate(event.getTimestamp().getTime()));
+                view.setDate(event.getTimestamp().getTime().getTime()));
 
         ImageView imageView = findViewById(R.id.imageView_eventFocus);
         imageView.setImageBitmap(event.getPicture());

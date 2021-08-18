@@ -1,13 +1,10 @@
-package com.mslinksya.pets.io.ui.util;
+package com.mslinksya.pets.io.utils;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
-
-import com.mslinksya.pets.io.utils.Log;
 
 public class BLEGATTCallback extends BluetoothGattCallback {
     private static final String TAG = BLEGATTCallback.class.getSimpleName();

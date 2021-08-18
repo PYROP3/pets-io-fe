@@ -12,7 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.mslinksya.pets.io.ui.util.BLEComm;
+import com.mslinksya.pets.io.utils.BLEComm;
 import com.mslinksya.pets.io.utils.Log;
 import android.view.View;
 import android.widget.EditText;

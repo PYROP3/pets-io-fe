@@ -3,6 +3,7 @@ package com.mslinksya.pets.io.data;
 import com.mslinksya.pets.io.data.model.Event;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class EventRepository {
         for (String eventID : eventList.keySet()) {
             result.add(eventList.get(eventID));
         }
+        result.sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
         return result;
     }
 

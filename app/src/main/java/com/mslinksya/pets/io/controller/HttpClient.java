@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.util.JsonReader;
+
+import com.mslinksya.pets.io.ui.settings.SettingsProvider;
 import com.mslinksya.pets.io.utils.Log;
 import android.widget.Toast;
 
@@ -63,9 +65,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_CREATE_ACCOUNT)
                 .build();
 
@@ -96,42 +97,14 @@ public class HttpClient implements Callback{
         OkHttpClient okHttpClient = new OkHttpClient();
 
         Log.d(TAG, "Preparing sendLoginRequest request 3");
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_LOGIN)
                 .build();
 
         Log.d(TAG, "Preparing sendLoginRequest request 4");
 
         Log.d(TAG, "Sending request to: " + url.toString());
-
-//        CompletableFuture<String> fcmTokenFuture = new CompletableFuture<>();
-//
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-//                            fcmTokenFuture.complete("<null>");
-//                            return;
-//                        }
-//
-//                        // Get new FCM registration token
-//                        String token = task.getResult();
-//                        Log.d(TAG, "got FCM token = [" + token + "]");
-//                        fcmTokenFuture.complete(token);
-//                    }
-//                });
-//
-//        String fcmToken;
-//        try {
-//            fcmToken = fcmTokenFuture.get(Constants.FCM_GET_TOKEN_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-//        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-//            Log.w(TAG, "FCM token timeout: " + e);
-//            fcmToken = "<null>";
-//        }
 
         JsonParser jsonParser = new JsonParser();
         JSONObject jsonObject = jsonParser.loginJson(email, password, MessagingService.getToken());
@@ -156,9 +129,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_VERIFY_ACCOUNT)
                 .addQueryParameter(Constants.USER_TOKEN_KEY, token)
                 .build();
@@ -186,37 +158,6 @@ public class HttpClient implements Callback{
         }
     }
 
-    public boolean updatePetPictures(Context context, Callback callback, String token){
-        Log.d(TAG, "Preparing updatePetPictures request 1");
-        if(!isNetworkAvailable(context))
-            return false;
-
-        Log.d(TAG, "Preparing pet pictures request : " + token);
-
-        OkHttpClient okHttpClient = new OkHttpClient();
-
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
-                .addPathSegment(Constants.SERVER_UPDATE_PET_PICS)
-                .build();
-
-        Log.d(TAG, "Sending request to: " + url.toString());
-
-        Request request = new Request.Builder()
-                .header("Authorization", Constants.KEY_AUTH_TOKEN + token)
-                .url(url)
-                .build();
-
-        Log.d(TAG, "Enqueuing new retrofit callback [" + Constants.SERVER_UPDATE_PET_PICS + "]");
-
-        okHttpClient.newCall(request).enqueue(callback);
-
-        Log.d(TAG, "Pet pictures request sent");
-
-        return true;
-    }
-
     public boolean registerPetsInitial(Context context, Callback callback, String token, List<Pet> pets){
         if(!isNetworkAvailable(context))
             return false;
@@ -225,9 +166,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REQUEST_INIT_PENDING_PETS)
                 .build();
 
@@ -272,9 +212,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_LOG_OUT)
                 .build();
 
@@ -303,9 +242,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REGISTER_DEVICE)
                 .build();
 
@@ -353,9 +291,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REQUEST_DEVICES)
                 .build();
 
@@ -398,9 +335,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REQUEST_EVENTS)
                 .addQueryParameter(Constants.DEVICE_ID_KEY, deviceID)
                 .build();
@@ -460,9 +396,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_EVENT_PIC)
                 .addQueryParameter(Constants.EVENT_ID_KEY, eventID)
                 .build();
@@ -499,9 +434,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REQUEST_DELETE_EVENT)
                 .addQueryParameter(Constants.EVENT_ID_KEY, eventID)
                 .build();
@@ -538,9 +472,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REQUEST_EDIT_EVENT)
                 .build();
 
@@ -584,9 +517,8 @@ public class HttpClient implements Callback{
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme(Constants.SERVER_SCHEME_HTTPS)
-                .host(Constants.SERVER_HOST).port(Constants.SERVER_PORT)
+        SettingsProvider.getInstance().loadSettings(context);
+		HttpUrl url = ServerController.getServerUrl()
                 .addPathSegment(Constants.SERVER_REQUEST_GET_PETS)
                 .build();
 

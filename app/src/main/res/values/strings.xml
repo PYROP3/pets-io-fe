@@ -50,12 +50,14 @@
     <string name="register_wifi_pass">Senha da rede WiFi</string>
     <string name="register_action">Registrar</string>
     <string name="register_help">Escaneie este código com seu dispositivo pets.io</string>
-<!--    <string name="string_wifi_ssid_default">VIVOFIBRA-7F90</string>-->
-<!--    <string name="string_wifi_pass_default">c662727f90</string>-->
+    <!--    <string name="string_wifi_ssid_default">VIVOFIBRA-7F90</string>-->
+    <!--    <string name="string_wifi_pass_default">c662727f90</string>-->
     <string name="string_wifi_ssid_default">NET_2GDC3667</string>
     <string name="string_wifi_pass_default">63DC3667</string>
 
     <string name="events_title">Eventos</string>
     <string name="events_choose_device">Escolha um dos seus dispositivos</string>
     <string name="events_no_devices">Você não possui nenhum dispositivo Pets.IO registrado</string>
+
+    <string name="settings_title">Configurações</string>
 </resources>
