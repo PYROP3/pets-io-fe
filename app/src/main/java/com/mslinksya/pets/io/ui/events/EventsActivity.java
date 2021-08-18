@@ -2,9 +2,11 @@ package com.mslinksya.pets.io.ui.events;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import com.mslinksya.pets.io.data.EventRepository;
@@ -121,26 +123,36 @@ public class EventsActivity extends AppCompatActivity {
 
             TextView eventTimestamp = new TextView(this);
             Calendar c = event.getTimestamp();
-            eventTimestamp.setText(String.format("%02d/%02d/%d\n%s",
+            eventTimestamp.setText(String.format("%02d/%02d/%d\n%s\n%s",
                     c.get(Calendar.DAY_OF_MONTH),
                     c.get(Calendar.MONTH) + 1,
                     c.get(Calendar.YEAR),
-                    getWeekday(c.get(Calendar.DAY_OF_WEEK))));
-            eventTimestamp.setHeight(event.getPicture().getHeight());
-            eventTimestamp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    getWeekday(c.get(Calendar.DAY_OF_WEEK)),
+                    LoginRepository.getInstance().getUser().getPet(event.getDetectedPet()).getName()));
+            eventTimestamp.setMinHeight(event.getPicture().getHeight());
             eventTimestamp.setGravity(Gravity.CENTER);
             eventTimestamp.setTextSize(22);
+            eventTimestamp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-            ClockView clockView = new ClockView(this, c);
-            clockView.setMinimumWidth(200);
-            clockView.setMinimumHeight(event.getPicture().getHeight());
-            // event.getTimestamp().toString()
+            TextView eventTime = new TextView(this);
+            eventTime.setText(String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
+            eventTime.setTypeface(ResourcesCompat.getFont(this, R.font.digital_readout_heavy));
+            eventTime.setTextColor(getFillColor(c));
+            eventTime.setMinHeight(event.getPicture().getHeight());
+            eventTime.setGravity(Gravity.CENTER);
+            eventTime.setTextSize(42);
+            eventTime.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+//            ClockView clockView = new ClockView(this, c);
+//            clockView.setMinimumWidth(200);
+//            clockView.setMinimumHeight(event.getPicture().getHeight());
 
             eventLayout.addView(eventImageView);
             eventLayout.addView(createSpace(50));
             eventLayout.addView(eventTimestamp);
             eventLayout.addView(createSpace(50));
-            eventLayout.addView(clockView);
+            eventLayout.addView(eventTime);
+//            eventLayout.addView(clockView);
 
             eventLayout.setOnClickListener(v -> {
                 Intent intent = new Intent(EventsActivity.this, EventFocusActivity.class);
@@ -165,5 +177,22 @@ public class EventsActivity extends AppCompatActivity {
         sp.setMinimumHeight(size);
         sp.setMinimumWidth(size);
         return sp;
+    }
+
+    private int getStrokeColor(Calendar calendar) {
+        return isDaytime(calendar)
+                ? getResources().getColor(R.color.clock_stroke_daytime)
+                : getResources().getColor(R.color.clock_stroke_nighttime);
+    }
+
+    private int getFillColor(Calendar calendar) {
+        return isDaytime(calendar)
+                ? getResources().getColor(R.color.clock_fill_daytime)
+                : getResources().getColor(R.color.clock_fill_nighttime);
+    }
+
+    private boolean isDaytime(Calendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        return (hour >= 6 && hour <= 18);
     }
 }

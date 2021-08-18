@@ -81,6 +81,16 @@ public class LoggedInUser {
         return this.pets;
     }
 
+    public Pet getPet(String petID) {
+        for (Pet pet :
+                this.pets) {
+            if (pet.getID().equals(petID)) {
+                return pet;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Pet> requestPets(Context context) {
         if (this.pets.isEmpty()) {
             Log.d(TAG, "Pet list empty, fetching from server");
