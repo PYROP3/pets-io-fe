@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
@@ -13,14 +14,18 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelUuid;
 
 import com.mslinksya.pets.io.data.model.RegistrationModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -37,6 +42,9 @@ public class BLEComm {
     private BluetoothAdapter mBluetoothAdapter;
     private Context mContext;
 
+    private BluetoothDevice mConnectedDevice;
+    private BLEGATTCallback mBluetoothGattCallback;
+
     public BLEComm(Context context) {
         mContext = context;
         mBluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -49,6 +57,80 @@ public class BLEComm {
 
     public boolean isPermissionGranted() {
         return mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public boolean connectGATT(BluetoothDevice bluetoothDevice, BLEGATTCallback callback) {
+        if (!isBluetoothEnabled()) {
+            Log.w(TAG, "BLE not enabled");
+            return false;
+        }
+
+        if (!isPermissionGranted()) {
+            Log.w(TAG, "Permission not granted");
+            return false;
+        }
+
+        mConnectedDevice = bluetoothDevice;
+
+        mBluetoothGattCallback = callback;
+
+        mConnectedDevice.connectGatt(mContext, false, mBluetoothGattCallback);
+
+        try {
+            Thread.sleep(BLE_CONNECT_TIMEOUT_MS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (!mBluetoothGattCallback.isConnected()) {
+            Log.e(TAG, "gatt is not connected");
+            disconnectDevice();
+            return false;
+        }
+
+        return true;
+    }
+
+    public void disconnectDevice() {
+        if (mBluetoothGattCallback != null) {
+            BluetoothGatt gatt = mBluetoothGattCallback.getGatt();
+            if (gatt != null) {
+                gatt.disconnect();
+                gatt.close();
+            }
+            mBluetoothGattCallback = null;
+        }
+        mConnectedDevice = null;
+    }
+
+    public boolean isConnected() {
+        return mBluetoothGattCallback != null;
+    }
+
+    public HashMap<String, BluetoothDevice> getPetsIODevicesInRange() {
+        HashMap<String, BluetoothDevice> deviceHashMap = new HashMap<>();
+        ScanCallback leScanCallback = new ScanCallback() {
+            @Override
+            public void onScanResult(int callbackType, ScanResult result) {
+                super.onScanResult(callbackType, result);
+                BluetoothDevice device = result.getDevice();
+                if (!deviceHashMap.containsKey(device.getName())) {
+                    deviceHashMap.put(device.getName(), device);
+                }
+            }
+        };
+
+        mBluetoothAdapter.getBluetoothLeScanner().startScan(leScanCallback);
+
+        try {
+            Thread.sleep(Constants.BLE_SCAN_TIMEOUT_MS);
+        } catch (InterruptedException ignored) {}
+
+        mBluetoothAdapter.getBluetoothLeScanner().stopScan(leScanCallback);
+
+        Log.d(TAG, "getPetsIODevicesInRange : " + deviceHashMap.toString());
+
+        return deviceHashMap;
     }
 
     public boolean registerDevice(RegistrationModel registrationModel) {
@@ -136,6 +218,14 @@ public class BLEComm {
         writeCharacteristic(gattCallback.getGatt(), service, BLE_UUID_CHAR_TOKN, registrationModel.getNonce());
 
         return true;
+    }
+
+    public String getReadableCharacteristic(String UUID) {
+        Log.d(TAG, "getReadableCharacteristic : UUID=" + UUID);
+        return mBluetoothGattCallback.getGatt()
+                .getService(java.util.UUID.fromString(BLE_UUID_SERVICE))
+                .getCharacteristic(java.util.UUID.fromString(UUID))
+                .getStringValue(0);
     }
 
     private void writeCharacteristic(BluetoothGatt gatt, BluetoothGattService service, String UUID, String value) {

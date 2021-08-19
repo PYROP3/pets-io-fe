@@ -22,7 +22,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PetsIO">
-        <activity android:name=".ui.settings.SettingsActivity"></activity>
+        <activity android:name=".ui.devices.DeviceStatusActivity"></activity>
+        <activity android:name=".ui.settings.SettingsActivity" />
         <activity android:name=".ui.events.EventFocusActivity" />
         <activity android:name=".ui.events.EventsActivity" />
         <activity android:name=".ui.register.RegisterActivity" />

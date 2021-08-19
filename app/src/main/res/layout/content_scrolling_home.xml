@@ -34,13 +34,13 @@
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/buttonHomeAddPet"
+                android:id="@+id/buttonHomeDeviceStatus"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/home_action_register_new_pet"
+                android:text="@string/home_action_device_status"
                 android:textSize="12sp"
-                app:icon="@android:drawable/ic_menu_add" />
+                app:icon="@android:drawable/ic_menu_info_details" />
 
         </TableRow>
 

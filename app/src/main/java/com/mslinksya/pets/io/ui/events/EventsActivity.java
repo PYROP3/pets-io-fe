@@ -63,7 +63,7 @@ public class EventsActivity extends AppCompatActivity {
             }
 
             runOnUiThread(() -> {
-                ArrayAdapter arrayAdapter = new ArrayAdapter<>(this,
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                         android.R.layout.simple_spinner_item, devicesList);
                 devicesSpinner.setAdapter(arrayAdapter);
                 arrayAdapter.setNotifyOnChange(true);
@@ -179,16 +179,16 @@ public class EventsActivity extends AppCompatActivity {
         return sp;
     }
 
-    private int getStrokeColor(Calendar calendar) {
-        return isDaytime(calendar)
-                ? getResources().getColor(R.color.clock_stroke_daytime)
-                : getResources().getColor(R.color.clock_stroke_nighttime);
-    }
+//    private int getStrokeColor(Calendar calendar) {
+//        return isDaytime(calendar)
+//                ? getResources().getColor(R.color.clock_stroke_daytime, null)
+//                : getResources().getColor(R.color.clock_stroke_nighttime, null);
+//    }
 
     private int getFillColor(Calendar calendar) {
         return isDaytime(calendar)
-                ? getResources().getColor(R.color.clock_fill_daytime)
-                : getResources().getColor(R.color.clock_fill_nighttime);
+                ? getResources().getColor(R.color.clock_fill_daytime, null)
+                : getResources().getColor(R.color.clock_fill_nighttime, null);
     }
 
     private boolean isDaytime(Calendar calendar) {

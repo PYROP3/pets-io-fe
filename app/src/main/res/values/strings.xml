@@ -23,7 +23,7 @@
     <!-- Home action strings -->
     <string name="home_action_register_device">Registrar dispositivo</string>
     <string name="home_action_get_data">Consultar dispositivos</string>
-    <string name="home_action_register_new_pet">Adicionar pet</string>
+    <string name="home_action_device_status">Dispositivos</string>
     <string name="home_action_livestream">Livestream</string>
     <string name="home_action_profile">Perfil</string>
     <string name="home_action_settings">Configurações</string>
@@ -52,12 +52,15 @@
     <string name="register_help">Escaneie este código com seu dispositivo pets.io</string>
     <string name="string_wifi_ssid_default">VIVOFIBRA-7F90</string>
     <string name="string_wifi_pass_default">c662727f90</string>
-<!--    <string name="string_wifi_ssid_default">NET_2GDC3667</string>-->
-<!--    <string name="string_wifi_pass_default">63DC3667</string>-->
+    <!--    <string name="string_wifi_ssid_default">NET_2GDC3667</string>-->
+    <!--    <string name="string_wifi_pass_default">63DC3667</string>-->
 
     <string name="events_title">Eventos</string>
     <string name="events_choose_device">Escolha um dos seus dispositivos</string>
     <string name="events_no_devices">Você não possui nenhum dispositivo Pets.IO registrado</string>
+    <string name="events_no_devices_found">Não encontramos nenhum dispositivo Pets.IO próximos</string>
+
+    <string name="devices_title">Dispositivos</string>
 
     <string name="settings_title">Configurações</string>
 </resources>

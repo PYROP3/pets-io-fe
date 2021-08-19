@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.mslinksya.pets.io.ui.devices.DeviceStatusActivity;
 import com.mslinksya.pets.io.ui.events.EventsActivity;
 import com.mslinksya.pets.io.R;
 import com.mslinksya.pets.io.data.LoginRepository;
@@ -55,6 +56,12 @@ public class HomeActivity extends AppCompatActivity {
         Button settingsButton = findViewById(R.id.buttonHomeSettings);
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
+        Button deviceStatusButton = findViewById(R.id.buttonHomeDeviceStatus);
+        deviceStatusButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, DeviceStatusActivity.class);
             startActivity(intent);
         });
 

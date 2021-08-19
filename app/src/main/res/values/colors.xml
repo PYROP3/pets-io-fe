@@ -12,4 +12,9 @@
     <color name="clock_stroke_nighttime">#E3C852</color>
     <color name="clock_fill_daytime">#E3C852</color>
     <color name="clock_fill_nighttime">#53278C</color>
+
+    <color name="status_not_initialized">#6C6C6C</color>
+    <color name="status_success">#5FFA3E</color>
+    <color name="status_connecting">#FF8E2B</color>
+    <color name="status_error">#E13636</color>
 </resources>

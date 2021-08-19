@@ -72,9 +72,19 @@ public class Constants {
     public static final String BLE_UUID_CHAR_SSID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
     public static final String BLE_UUID_CHAR_PASS = "995a473b-498e-43d0-9be3-7f3c37ba005f";
     public static final String BLE_UUID_CHAR_TOKN = "70461f4d-4142-4135-9582-8d9a9fc50ea4";
+    public static final String BLE_UUID_CHAR_CAM = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+    public static final String BLE_UUID_CHAR_CON = "995a473b-498e-43d0-9be3-7f3c37ba005f";
+    public static final String BLE_UUID_CHAR_REG = "70461f4d-4142-4135-9582-8d9a9fc50ea4";
 
     public static final String SHARED_PREFERENCES_BOOLEAN_SETTINGS = "SHARED_PREFERENCES_BOOLEAN_SETTINGS";
     public static final String SETTING_ENV = "SETTING_ENV";
 
+    public static final String STATUS_BLE_NOT_INITIALIZED = "not initialized";
+    public static final String STATUS_BLE_SUCCESS = "success";
+    public static final String STATUS_BLE_ERROR = "error";
+    public static final String STATUS_BLE_CONNECTING = "connecting";
+
     public static final int BLE_CONNECT_TIMEOUT_MS = 10000;
+
+    public static final int BLE_SCAN_TIMEOUT_MS = 3000;
 }
