@@ -92,9 +92,11 @@ public class BLEComm {
     }
 
     public void disconnectDevice() {
+        Log.d(TAG, "disconnectDevice");
         if (mBluetoothGattCallback != null) {
             BluetoothGatt gatt = mBluetoothGattCallback.getGatt();
             if (gatt != null) {
+                Log.d(TAG, "disconnectDevice : stop gatt");
                 gatt.disconnect();
                 gatt.close();
             }
@@ -114,9 +116,18 @@ public class BLEComm {
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
                 BluetoothDevice device = result.getDevice();
-                if (!deviceHashMap.containsKey(device.getName())) {
+                Log.d(TAG, "onScanResult : " + callbackType + ", " + device.getName());
+                if (device.getName() != null &&
+                        device.getName().startsWith(Constants.PETS_IO_BLE_TAG) &&
+                        !deviceHashMap.containsKey(device.getName())) {
                     deviceHashMap.put(device.getName(), device);
                 }
+            }
+
+            @Override
+            public void onScanFailed(int errorCode) {
+                super.onScanFailed(errorCode);
+                Log.w(TAG, "onScanFailed : " + errorCode);
             }
         };
 
@@ -217,15 +228,26 @@ public class BLEComm {
         writeCharacteristic(gattCallback.getGatt(), service, BLE_UUID_CHAR_PASS, registrationModel.getPass());
         writeCharacteristic(gattCallback.getGatt(), service, BLE_UUID_CHAR_TOKN, registrationModel.getNonce());
 
+        mBluetoothGattCallback = gattCallback;
+
         return true;
     }
 
     public String getReadableCharacteristic(String UUID) {
-        Log.d(TAG, "getReadableCharacteristic : UUID=" + UUID);
-        return mBluetoothGattCallback.getGatt()
+        CompletableFuture<String> pendingCharacteristic = new CompletableFuture<>();
+        mBluetoothGattCallback.requestCharacteristicRead(pendingCharacteristic);
+        mBluetoothGattCallback.getGatt().readCharacteristic(
+                mBluetoothGattCallback.getGatt()
                 .getService(java.util.UUID.fromString(BLE_UUID_SERVICE))
-                .getCharacteristic(java.util.UUID.fromString(UUID))
-                .getStringValue(0);
+                .getCharacteristic(java.util.UUID.fromString(UUID)));
+        String value = null;
+        try {
+            value = pendingCharacteristic.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "getReadableCharacteristic : UUID=" + UUID + " => " + value);
+        return value;
     }
 
     private void writeCharacteristic(BluetoothGatt gatt, BluetoothGattService service, String UUID, String value) {

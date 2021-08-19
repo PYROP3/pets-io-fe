@@ -58,7 +58,7 @@
     <string name="events_title">Eventos</string>
     <string name="events_choose_device">Escolha um dos seus dispositivos</string>
     <string name="events_no_devices">Você não possui nenhum dispositivo Pets.IO registrado</string>
-    <string name="events_no_devices_found">Não encontramos nenhum dispositivo Pets.IO próximos</string>
+    <string name="events_no_devices_found">Não encontramos nenhum dispositivo Pets.IO próximo</string>
 
     <string name="devices_title">Dispositivos</string>
 

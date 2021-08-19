@@ -6,11 +6,14 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothProfile;
 
+import java.util.concurrent.CompletableFuture;
+
 public class BLEGATTCallback extends BluetoothGattCallback {
     private static final String TAG = BLEGATTCallback.class.getSimpleName();
 
     private BluetoothGatt mBluetoothGatt = null;
     private BluetoothGattCallback mExtraCallback = null;
+    private CompletableFuture<String> pendingCharacteristic = null;
 
     public BLEGATTCallback() {}
 
@@ -22,6 +25,10 @@ public class BLEGATTCallback extends BluetoothGattCallback {
 
     public BluetoothGatt getGatt() {
         return mBluetoothGatt;
+    }
+
+    public void requestCharacteristicRead(CompletableFuture<String> completableFuture) {
+        pendingCharacteristic = completableFuture;
     }
 
     @Override
@@ -67,6 +74,11 @@ public class BLEGATTCallback extends BluetoothGattCallback {
     @Override
     public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         super.onCharacteristicRead(gatt, characteristic, status);
+        if (pendingCharacteristic != null) {
+            String value = characteristic.getStringValue(0);
+            Log.d(TAG, "Reporting characteristic read: " + value);
+            pendingCharacteristic.complete(value);
+        }
         if (mExtraCallback != null) mExtraCallback.onCharacteristicRead(gatt, characteristic, status);
     }
 

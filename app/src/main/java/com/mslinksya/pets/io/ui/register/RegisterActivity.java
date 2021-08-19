@@ -114,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                         "Não foi possível comunicar com o seu dispositivo",
                         Toast.LENGTH_LONG).show());
             } else {
+                comm.disconnectDevice();
                 runOnUiThread(() -> Toast.makeText(RegisterActivity.this,
                         "Seu dispositivo está sendo registrado com o nosso servidor",
                         Toast.LENGTH_LONG).show());

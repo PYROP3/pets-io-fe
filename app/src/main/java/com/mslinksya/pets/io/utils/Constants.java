@@ -2,8 +2,6 @@ package com.mslinksya.pets.io.utils;
 
 public class Constants {
 
-    public static final String TAG = "[StreetAnalyzer]";
-
     public static final int SERVER_RESPONSE_OK = 0;
     public static final String SERVER_LOGIN = "auth";
     public static final String SERVER_SCHEME_HTTPS = "http";
@@ -72,9 +70,9 @@ public class Constants {
     public static final String BLE_UUID_CHAR_SSID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
     public static final String BLE_UUID_CHAR_PASS = "995a473b-498e-43d0-9be3-7f3c37ba005f";
     public static final String BLE_UUID_CHAR_TOKN = "70461f4d-4142-4135-9582-8d9a9fc50ea4";
-    public static final String BLE_UUID_CHAR_CAM = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
-    public static final String BLE_UUID_CHAR_CON = "995a473b-498e-43d0-9be3-7f3c37ba005f";
-    public static final String BLE_UUID_CHAR_REG = "70461f4d-4142-4135-9582-8d9a9fc50ea4";
+    public static final String BLE_UUID_CHAR_CAM = "dd1e4f59-d6c5-4d65-a2c5-ed2b6d2570dd";
+    public static final String BLE_UUID_CHAR_CON = "55246fe7-1105-4395-a472-f26201b3d75c";
+    public static final String BLE_UUID_CHAR_REG = "2f6255b5-c4fa-403c-9b18-11f40ffee21b";
 
     public static final String SHARED_PREFERENCES_BOOLEAN_SETTINGS = "SHARED_PREFERENCES_BOOLEAN_SETTINGS";
     public static final String SETTING_ENV = "SETTING_ENV";
@@ -83,8 +81,13 @@ public class Constants {
     public static final String STATUS_BLE_SUCCESS = "success";
     public static final String STATUS_BLE_ERROR = "error";
     public static final String STATUS_BLE_CONNECTING = "connecting";
+    public static final String STATUS_BLE_WAITING = "waiting";
+    public static final String STATUS_BLE_SKIPPED = "skipped";
+    public static final String STATUS_BLE_REGISTERING = "registering";
+
+    public static final String PETS_IO_BLE_TAG = "Pets.io_PIO";
 
     public static final int BLE_CONNECT_TIMEOUT_MS = 10000;
 
-    public static final int BLE_SCAN_TIMEOUT_MS = 3000;
+    public static final int BLE_SCAN_TIMEOUT_MS = 2000;
 }

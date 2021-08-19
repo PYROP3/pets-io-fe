@@ -13,8 +13,9 @@
     <color name="clock_fill_daytime">#E3C852</color>
     <color name="clock_fill_nighttime">#53278C</color>
 
-    <color name="status_not_initialized">#6C6C6C</color>
-    <color name="status_success">#5FFA3E</color>
-    <color name="status_connecting">#FF8E2B</color>
-    <color name="status_error">#E13636</color>
+    <color name="status_grey">#6C6C6C</color>
+    <color name="status_green">#5FFA3E</color>
+    <color name="status_yellow">#F4F021</color>
+    <color name="status_orange">#FF8E2B</color>
+    <color name="status_red">#E13636</color>
 </resources>
