@@ -76,6 +76,7 @@ public class Constants {
 
     public static final String SHARED_PREFERENCES_BOOLEAN_SETTINGS = "SHARED_PREFERENCES_BOOLEAN_SETTINGS";
     public static final String SETTING_ENV = "SETTING_ENV";
+    public static final String SETTING_REGISTER = "SETTING_REGISTER";
 
     public static final String STATUS_BLE_NOT_INITIALIZED = "not initialized";
     public static final String STATUS_BLE_SUCCESS = "success";

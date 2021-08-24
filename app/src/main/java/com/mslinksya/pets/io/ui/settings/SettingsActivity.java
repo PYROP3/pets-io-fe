@@ -10,6 +10,7 @@ import com.mslinksya.pets.io.R;
 import com.mslinksya.pets.io.utils.Log;
 
 import static com.mslinksya.pets.io.utils.Constants.SETTING_ENV;
+import static com.mslinksya.pets.io.utils.Constants.SETTING_REGISTER;
 
 public class SettingsActivity extends AppCompatActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
@@ -21,12 +22,18 @@ public class SettingsActivity extends AppCompatActivity {
 
         updateSettings();
 
-        Switch envSwitch = findViewById(R.id.switch_settings_env);
         SettingsProvider settingsProvider = SettingsProvider.getInstance();
+        Switch envSwitch = findViewById(R.id.switch_settings_env);
 
         envSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Log.d(TAG, "envSwitch->" + isChecked);
             settingsProvider.setBooleanSetting(SETTING_ENV, isChecked);
+        });
+        Switch regSwitch = findViewById(R.id.switch_settings_register);
+
+        regSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Log.d(TAG, "regSwitch->" + isChecked);
+            settingsProvider.setBooleanSetting(SETTING_REGISTER, isChecked);
         });
     }
 
@@ -49,7 +56,9 @@ public class SettingsActivity extends AppCompatActivity {
         settingsProvider.loadSettings(this);
 
         Switch envSwitch = findViewById(R.id.switch_settings_env);
+        Switch regSwitch = findViewById(R.id.switch_settings_register);
 
         envSwitch.setChecked(settingsProvider.getBooleanSetting(SETTING_ENV));
+        regSwitch.setChecked(settingsProvider.getBooleanSetting(SETTING_REGISTER));
     }
 }

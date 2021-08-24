@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.mslinksya.pets.io.ui.settings.SettingsProvider;
 import com.mslinksya.pets.io.utils.BLEComm;
 import com.mslinksya.pets.io.utils.Log;
 import android.view.View;
@@ -24,6 +25,8 @@ import com.mslinksya.pets.io.data.model.RegistrationModel;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+
+import static com.mslinksya.pets.io.utils.Constants.SETTING_REGISTER;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -56,18 +59,26 @@ public class RegisterActivity extends AppCompatActivity {
                 .getText().toString();
 
         new Thread(() -> {
-            RegistrationModel registrationModel = RegistrationController.requestRegistration(
-                    RegisterActivity.this,
-                    wifi_ssid,
-                    wifi_pass
-            );
+            boolean doRegister = SettingsProvider.getInstance().getBooleanSetting(SETTING_REGISTER);
+            RegistrationModel registrationModel;
 
-            if (registrationModel == null) {
-                Log.w(TAG, "Could not request registration");
+            if (doRegister) {
+                registrationModel = RegistrationController.requestRegistration(
+                        RegisterActivity.this,
+                        wifi_ssid,
+                        wifi_pass
+                );
 
-                enableRegister();
-                runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Não foi possível realizar a solicitação", Toast.LENGTH_LONG).show());
-                return;
+                if (registrationModel == null) {
+                    Log.w(TAG, "Could not request registration");
+
+                    enableRegister();
+                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Não foi possível realizar a solicitação", Toast.LENGTH_LONG).show());
+                    return;
+                }
+            } else {
+                Log.d(TAG, "Skipping registration");
+                registrationModel = new RegistrationModel(wifi_ssid, wifi_pass, "");
             }
 
             BLEComm comm = new BLEComm(this);
