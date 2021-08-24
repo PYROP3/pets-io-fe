@@ -21,8 +21,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PetsIO">
-        <activity android:name=".ui.devices.DeviceStatusActivity"></activity>
+        android:theme="@style/Theme.PetsIO"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.stream.StreamActivity"></activity>
+        <activity android:name=".ui.devices.DeviceStatusActivity" />
         <activity android:name=".ui.settings.SettingsActivity" />
         <activity android:name=".ui.events.EventFocusActivity" />
         <activity android:name=".ui.events.EventsActivity" />

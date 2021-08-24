@@ -5,6 +5,8 @@ public class Constants {
     public static final int SERVER_RESPONSE_OK = 0;
     public static final String SERVER_LOGIN = "auth";
     public static final String SERVER_SCHEME_HTTPS = "http";
+    public static final String SERVER_SCHEME_HTTP = "http";
+    public static final int SERVER_PORT_HTTP = 80;
     public static final String SERVER_HOST_CLOUD = "pets-io.herokuapp.com";
     public static final String SERVER_HOST_LOCAL = "192.168.15.27";
     public static final int SERVER_PORT_CLOUD = 80;
@@ -70,6 +72,7 @@ public class Constants {
     public static final String BLE_UUID_CHAR_SSID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
     public static final String BLE_UUID_CHAR_PASS = "995a473b-498e-43d0-9be3-7f3c37ba005f";
     public static final String BLE_UUID_CHAR_TOKN = "70461f4d-4142-4135-9582-8d9a9fc50ea4";
+    public static final String BLE_UUID_CHAR_STRM = "1a014454-e990-438b-91f5-fa11173ca7b0";
     public static final String BLE_UUID_CHAR_CAM = "dd1e4f59-d6c5-4d65-a2c5-ed2b6d2570dd";
     public static final String BLE_UUID_CHAR_CON = "55246fe7-1105-4395-a472-f26201b3d75c";
     public static final String BLE_UUID_CHAR_REG = "2f6255b5-c4fa-403c-9b18-11f40ffee21b";

@@ -64,6 +64,21 @@
             android:layout_height="match_parent">
 
             <Button
+                android:id="@+id/buttonHomeLivestream"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:text="@string/home_action_livestream"
+                android:textSize="12sp"
+                app:icon="@android:drawable/ic_menu_camera" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
                 android:id="@+id/buttonHomeProfile"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
