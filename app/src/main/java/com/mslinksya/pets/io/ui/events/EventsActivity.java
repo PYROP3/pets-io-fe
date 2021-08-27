@@ -120,6 +120,7 @@ public class EventsActivity extends AppCompatActivity {
 
             ImageView eventImageView = new ImageView(this);
             eventImageView.setImageBitmap(event.getPicture());
+            Log.d(TAG, "Adding picture " + event.getPicture().getWidth() + "x" + event.getPicture().getHeight());
 
             TextView eventTimestamp = new TextView(this);
             Calendar c = event.getTimestamp();
@@ -143,16 +144,11 @@ public class EventsActivity extends AppCompatActivity {
             eventTime.setTextSize(42);
             eventTime.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-//            ClockView clockView = new ClockView(this, c);
-//            clockView.setMinimumWidth(200);
-//            clockView.setMinimumHeight(event.getPicture().getHeight());
-
             eventLayout.addView(eventImageView);
             eventLayout.addView(createSpace(50));
             eventLayout.addView(eventTimestamp);
             eventLayout.addView(createSpace(50));
             eventLayout.addView(eventTime);
-//            eventLayout.addView(clockView);
 
             eventLayout.setOnClickListener(v -> {
                 Intent intent = new Intent(EventsActivity.this, EventFocusActivity.class);
@@ -178,12 +174,6 @@ public class EventsActivity extends AppCompatActivity {
         sp.setMinimumWidth(size);
         return sp;
     }
-
-//    private int getStrokeColor(Calendar calendar) {
-//        return isDaytime(calendar)
-//                ? getResources().getColor(R.color.clock_stroke_daytime, null)
-//                : getResources().getColor(R.color.clock_stroke_nighttime, null);
-//    }
 
     private int getFillColor(Calendar calendar) {
         return isDaytime(calendar)

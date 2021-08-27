@@ -88,7 +88,7 @@ public class LoggedInUser {
                 return pet;
             }
         }
-        return null;
+        return new Pet(petID, "?");
     }
 
     public ArrayList<Pet> requestPets(Context context) {

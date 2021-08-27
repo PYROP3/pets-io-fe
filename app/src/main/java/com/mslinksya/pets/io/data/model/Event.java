@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Event implements Parcelable {
+    private static final String TAG = Event.class.getSimpleName();
+
     private final String ID;
     private final String device;
     private final String extra;
@@ -59,7 +61,13 @@ public class Event implements Parcelable {
     };
 
     public void setPicture(Bitmap picture) {
-        this.picture = picture;
+        if (picture.getWidth() > 320 || picture.getHeight() > 240) {
+            Log.w(TAG, "Recreating scaled bitmap (" + picture.getWidth() + "x" + picture.getHeight() + ")");
+            this.picture = Bitmap.createScaledBitmap(picture, 320, 240, false);
+        } else {
+            Log.w(TAG, "Using original picture");
+            this.picture = picture;
+        }
     }
 
     public Bitmap getPicture() {
