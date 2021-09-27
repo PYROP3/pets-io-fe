@@ -38,11 +38,7 @@ import java.util.List;
 public class EventsActivity extends AppCompatActivity {
     private static final String TAG = EventsActivity.class.getSimpleName();
 
-//    private static volatile int eventIndex = -1;
-//
-//    public static void deletedEvent(int eventIndex) {
-//        EventsActivity.eventIndex = eventIndex;
-//    }
+    private static String lastDeviceId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +69,7 @@ public class EventsActivity extends AppCompatActivity {
                         String device = (String)devicesSpinner.getAdapter().getItem(position);
                         if (!device.equals(getString(R.string.events_no_devices)) &&
                                 !device.equals(getString(R.string.events_choose_device))) {
+                            lastDeviceId = device;
                             requestUpdateEventList(device);
                         }
                     }
@@ -89,7 +86,9 @@ public class EventsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateEventList();
+        if (lastDeviceId != null) {
+            requestUpdateEventList(lastDeviceId);
+        }
     }
 
     private void requestUpdateEventList(String deviceID) {

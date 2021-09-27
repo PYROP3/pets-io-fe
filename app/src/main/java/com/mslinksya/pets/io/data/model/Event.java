@@ -29,13 +29,6 @@ public class Event implements Parcelable {
 
         this.timestamp = Calendar.getInstance();
         this.timestamp.setTime(new Date(timestamp.getTime() + this.timestamp.getTimeZone().getRawOffset()));
-//        Log.d("Event", "New event offset=" + this.timestamp.getTimeZone().getRawOffset());
-//        Log.d("Event", "New event timezone=" + timestamp.toString());
-//        Log.d("Event", "New event calendar=" + this.timestamp.toString());
-//        this.timestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        Log.d("Event", "New event prev calendar=" + this.timestamp.toString());
-//        Log.d("Event", "New event with pet = " + detectedPet + ", timezone=" + this.timestamp.getTime());
-//        Log.d("Event", "New event updated calendar=" + this.timestamp.toString());
     }
 
     protected Event(Parcel in) {
